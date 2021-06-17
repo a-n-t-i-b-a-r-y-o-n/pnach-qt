@@ -3,10 +3,9 @@ use qt_widgets::QApplication;
 
 mod main_window;
 mod main_window_slots;
-mod input_pane;
-mod output_pane;
 mod embedded_images;
-mod input_tab_raw;
+mod pane;
+mod tab;
 
 fn main() {
     QApplication::init(|app| unsafe {

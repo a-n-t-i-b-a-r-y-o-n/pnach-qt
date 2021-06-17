@@ -1,15 +1,16 @@
 use std::rc::Rc;
 use cpp_core::{Ptr, StaticUpcast};
 use qt_core::{qs, QBox, QObject, QPtr};
-use qt_widgets::{QMainWindow, QMenu, QMenuBar, QHBoxLayout, QWidget};
-use crate::input_pane::InputPane;
-use crate::output_pane::OutputPane;
+use qt_widgets::{QDialog, QMainWindow, QMenu, QMenuBar, QHBoxLayout, QWidget};
+use crate::pane::{left_pane::LeftPane, right_pane::RightPane};
 
 pub struct MainWindow {
-	pub window:		QBox<QMainWindow>,
+	pub window:		QBox<QDialog>,
 	pub menu:		QBox<QMenuBar>,
 	pub central:	QBox<QWidget>,
 	pub layout:		QBox<QHBoxLayout>,
+	pub left_pane:	QBox<QGroupBox>,
+	pub right_pane:	QBox<QGroupBox>,
 }
 
 impl StaticUpcast<QObject> for MainWindow {
@@ -22,9 +23,9 @@ impl MainWindow {
 	/// MainWindow factory
 	pub unsafe fn new() -> Rc<Self> {
 		// Qt window & central widget
-		let window = QMainWindow::new_0a();
+		let window = QDialog::new_0a();
 		let central = QWidget::new_1a(&window);
-		window.set_central_widget(&central);
+		//window.set_central_widget(&central);
 		// Top menu bar
 		let menu = window.menu_bar().into_q_box();
 		// Basic grid layout
@@ -77,11 +78,11 @@ impl MainWindow {
 		// Set the grid spacing
 		&self.layout.set_spacing(10);
 
-		let input_pane = InputPane::new();
+		let input_pane = LeftPane::new(self.central.as_ptr());
 
 		&self.layout.add_widget(&input_pane.base);
 
-		&self.layout.add_widget(&OutputPane::new().base);
+		&self.layout.add_widget(&RightPane::new().base);
 
 		// Ensure that left and right panes "stretch" identically
 		&self.layout.set_stretch(0, 1);

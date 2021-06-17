@@ -1,27 +1,29 @@
 use std::rc::Rc;
 use cpp_core::{Ptr, StaticUpcast};
-use qt_core::{QBox, QObject};
+use qt_core::{qs, QBox, QObject};
 use qt_widgets::{QGridLayout, QPlainTextEdit, QWidget};
+use crate::tab::{InputTab, TabType};
 
-pub struct InputTab_Raw {
+pub struct TabInputEncoded {
 	pub base:	QBox<QWidget>,
 	pub layout:	QBox<QGridLayout>,
 	pub field:	QBox<QPlainTextEdit>,
 }
 
-impl StaticUpcast<QObject> for InputTab_Raw {
+impl StaticUpcast<QObject> for TabInputEncoded {
 	unsafe fn static_upcast(ptr: Ptr<Self>) -> Ptr<QObject> {
 		ptr.base.as_ptr().static_upcast()
 	}
 }
 
-impl InputTab_Raw {
+impl TabInputEncoded {
 	pub unsafe fn new() -> Rc<Self> {
 		let base = QWidget::new_0a();
 		let layout = QGridLayout::new_1a(&base);
 		base.set_layout(&layout);
 
 		let field = QPlainTextEdit::new();
+		let panel = QWidget::new_0a();
 
 		let this = Rc::new(Self {
 			base,
@@ -35,5 +37,16 @@ impl InputTab_Raw {
 
 	unsafe fn initialize_tab(self: &Rc<Self>) {
 		&self.layout.add_widget_5a(&self.field, 0, 0, -1, -1);
+	}
+
+}
+
+impl InputTab for TabInputEncoded {
+	fn get_tab_type() -> TabType {
+		TabType::ENCODED
+	}
+
+	unsafe fn get_raw_codes(self: &Rc<Self>) -> String {
+		String::from(self.field.to_plain_text().as_raw_ref())
 	}
 }
