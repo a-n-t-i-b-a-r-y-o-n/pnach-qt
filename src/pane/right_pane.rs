@@ -48,16 +48,21 @@ impl RightPane {
 
 	/// Add widgets, connect slots
 	unsafe fn initialize_pane(self: &Rc<Self>) {
+		/// Add the field, stretching to width
 		&self.layout.add_widget_5a(&self.field, 0, 0, 2, -1);
-
+		// Add slots for buttons along the bottom
 		&self.refresh_btn.clicked().connect(&self.slot_on_refresh_btn_clicked());
 		&self.copy_btn.clicked().connect(&self.slot_on_copy_btn_clicked());
 		&self.save_btn.clicked().connect(&self.slot_on_save_btn_clicked());
-
+		// Place buttons into layout along the bottom
 		&self.layout.add_widget_5a(&self.refresh_btn, 2, 0, 1, 1);
 		&self.layout.add_widget_5a(&self.copy_btn, 2, 1, 1, 1);
 		&self.layout.add_widget_5a(&self.save_btn, 2, 2, 1, 1);
 	}
 
+	/// Refresh the field
+	pub fn refresh_field(self: &Rc<Self>) {
+
+	}
 
 }

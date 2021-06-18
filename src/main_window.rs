@@ -35,8 +35,7 @@ impl MainWindow {
 		// 		 This ensures they have global static pointers, and allows slot connections to work.
 		let left_pane = LeftPane::new();
 		let right_pane = RightPane::new();
-		layout.add_widget(&left_pane.base);
-		layout.add_widget(&right_pane.base);
+
 
 		Rc::new(Self {
 			window,
@@ -84,9 +83,11 @@ impl MainWindow {
 	}
 	/// Fill the main window layout with widgets
 	unsafe fn initialize_layout(self: &Rc<Self>) {
+		// Add panes to layout
+		&self.layout.add_widget(&self.left_pane.base);
+		&self.layout.add_widget(&self.right_pane.base);
 		// Set the grid spacing
 		&self.layout.set_spacing(10);
-
 		// Ensure that left and right panes "stretch" identically
 		&self.layout.set_stretch(0, 1);
 		&self.layout.set_stretch(1, 1);
