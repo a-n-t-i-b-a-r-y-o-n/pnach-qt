@@ -9,10 +9,4 @@ impl main_window::MainWindow {
 	pub unsafe fn new_file(self: &Rc<Self>) {
 		QMessageBox::information_q_widget2_q_string(&self.central, &qs("Example"), &qs("MessageBox"));
 	}
-
-	#[slot(SlotNoArgs)]
-	pub unsafe fn message_box(self: &Rc<Self>) {
-		QMessageBox::information_q_widget2_q_string(&self.central, &qs("Other call"), &qs("The message"));
-	}
-
 }

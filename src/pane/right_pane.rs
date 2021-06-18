@@ -59,22 +59,5 @@ impl RightPane {
 		&self.layout.add_widget_5a(&self.save_btn, 2, 2, 1, 1);
 	}
 
-	#[slot(SlotNoArgs)]
-	pub unsafe fn on_refresh_btn_clicked(self: &Rc<Self>) {
-		&self.field.set_plain_text(&qs("Refreshing..."));
-		QMessageBox::information_q_widget2_q_string(NullPtr, &qs("Example"), &qs("MessageBox"));
-		println!("Hello?");
-	}
-	#[slot(SlotNoArgs)]
-	pub unsafe fn on_copy_btn_clicked(self: &Rc<Self>) {
-		&self.field.set_plain_text(&qs("Copying..."));
-		QMessageBox::information_q_widget2_q_string(NullPtr, &qs("Example"), &qs("MessageBox"));
-		println!("Hello?");
-	}
-	#[slot(SlotNoArgs)]
-	pub unsafe fn on_save_btn_clicked(self: &Rc<Self>) {
-		&self.field.set_plain_text(&qs("Saving..."));
-		QMessageBox::information_q_widget2_q_string(NullPtr, &qs("Example"), &qs("MessageBox"));
-		println!("Hello?");
-	}
+
 }

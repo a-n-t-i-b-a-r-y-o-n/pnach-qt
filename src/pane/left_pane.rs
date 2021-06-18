@@ -16,7 +16,6 @@ use qt_widgets::{
 use crate::main_window::MainWindow;
 
 pub struct LeftPane {
-	pub parent:			Ptr<QWidget>,
 	pub base:			QBox<QGroupBox>,		// Base widget - a group box
 	pub layout:			QBox<QGridLayout>,		// Group box layout
 	pub tab_widget:		QBox<QTabWidget>,		// Tab container
@@ -30,7 +29,7 @@ impl StaticUpcast<QObject> for LeftPane {
 }
 
 impl LeftPane {
-	pub unsafe fn new(parent: Ptr<QWidget>) -> Rc<Self> {
+	pub unsafe fn new() -> Rc<Self> {
 		// Base group box and layout
 		let group_box = QGroupBox::from_q_string(&qs("Input Codes"));
 		let layout = QGridLayout::new_1a(&group_box);
@@ -41,18 +40,17 @@ impl LeftPane {
 		let add_btn = QPushButton::from_q_icon_q_string(&get_icon(ICON::ADD), &qs(""));
 		// Compose pane object w/ above widgets
 		let this = Rc::new(Self {
-			parent,
 			base: group_box,
 			layout,
 			tab_widget: tabs,
 			add_tab_btn: add_btn
 		});
 		// Finish initialization of pane & widgets
-		this.initialize_pane();
+		this.initialize();
 		this
 	}
 	/// Add widgets, connect slots
-	unsafe fn initialize_pane(self: &Rc<Self>) {
+	unsafe fn initialize(self: &Rc<Self>) {
 		// Set the tab position to the bottom (aka "South")
 		&self.tab_widget.set_tab_position(qt_widgets::q_tab_widget::TabPosition::South);
 		// Set add_tab_btn to the empty corner, like a normal "Add" button
@@ -60,9 +58,9 @@ impl LeftPane {
 		// Create a custom context menu for the add button
 		self.add_tab_btn.set_context_menu_policy(ContextMenuPolicy::CustomContextMenu);
 		self.add_tab_btn.custom_context_menu_requested()
-			.connect(&self.slot_on_add_tab_btn_context_menu_requested());
+			.connect(&self.slot_add_tab_context_menu_requested());
 		self.add_tab_btn.clicked()
-			.connect(&self.slot_button_clicked());
+			.connect(&self.slot_add_tab_clicked());
 
 		// Add a Raw Code tab to start with
 		let tab0 = TabInputRaw::new();
@@ -71,6 +69,8 @@ impl LeftPane {
 		// Add tab control to pane's base widget
 		&self.layout.add_widget_5a(&self.tab_widget, 0, 0, 1, -1);
 	}
+
+
 
 
 }
