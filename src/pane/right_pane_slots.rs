@@ -12,10 +12,6 @@ use crate::pane::right_pane;
 /// Right pane slots
 impl right_pane::RightPane {
 	#[slot(SlotNoArgs)]
-	pub unsafe fn on_refresh_btn_clicked(self: &Rc<Self>) {
-		//&self.field.set_plain_text(&qs(format!("{:?}", &self.parent.left_pane.tab_widget.children())));
-	}
-	#[slot(SlotNoArgs)]
 	pub unsafe fn on_copy_btn_clicked(self: &Rc<Self>) {
 		&self.field.set_plain_text(&qs("Copying..."));
 	}

@@ -1,8 +1,9 @@
 use std::rc::Rc;
 use cpp_core::{Ptr, StaticUpcast};
 use qt_core::{qs, QBox, QObject, QPtr};
-use qt_widgets::{QDialog, QMainWindow, QMenu, QMenuBar, QGroupBox, QHBoxLayout, QWidget};
+use qt_widgets::{QDialog, QMainWindow, QMenu, QMenuBar, QGroupBox, QHBoxLayout, QPushButton, QWidget};
 use crate::pane::{left_pane::LeftPane, right_pane::RightPane};
+use crate::embedded_images::*;
 
 pub struct MainWindow {
 	pub window:		QBox<QMainWindow>,
@@ -11,6 +12,7 @@ pub struct MainWindow {
 	pub layout:		QBox<QHBoxLayout>,
 	pub left_pane:	Rc<LeftPane>,
 	pub right_pane:	Rc<RightPane>,
+	pub refresh_btn: QBox<QPushButton>,
 }
 
 impl StaticUpcast<QObject> for MainWindow {
@@ -31,11 +33,15 @@ impl MainWindow {
 		// Basic grid layout
 		let layout = QHBoxLayout::new_1a(&central);
 		// Create left and right panes and add to layout
-		// NOTE: The left and right panes have to be created here.
+		// NOTE: The left and right panes *must* be created here.
 		// 		 This ensures they have global static pointers, and allows slot connections to work.
 		let left_pane = LeftPane::new();
 		let right_pane = RightPane::new();
-
+		// Output refresh button, displayed in the right pane
+		// NOTE: This button is created as part of the main window to allow easily moving
+		//		 data between the left & right panes and their child widgets, but is drawn
+		//		 in the right pane's button row for logical UI consistency.
+		let refresh_btn = QPushButton::from_q_icon_q_string(&get_icon(ICON::REFRESH), &qs(""));
 
 		Rc::new(Self {
 			window,
@@ -44,20 +50,26 @@ impl MainWindow {
 			layout,
 			left_pane,
 			right_pane,
+			refresh_btn,
 		})
 	}
 	/// Draw the main window
 	pub unsafe fn show(self: &Rc<Self>) { &self.window.show(); }
 	/// Initialize the main window
 	pub unsafe fn initialize(self: &Rc<Self>){
+		// Initialize window frame
 		&self.initialize_frame();
+		// Create & initialize window menu bar
 		&self.initialize_menu_bar();
+		// Initialize and configure window layout
 		&self.initialize_layout();
+		// Connect the refresh button clicked() slot
+		&self.refresh_btn.clicked().connect(&self.slot_refresh_clicked());
 	}
 	/// Initialize the main window frame
 	unsafe fn initialize_frame(self: &Rc<Self>) {
-		// Set window size
-		&self.window.resize_2a(500, 500);
+		// Set window size and resize central widget to match
+		&self.window.resize_2a(900, 600);
 		&self.central.resize_1a(&self.window.size());
 		// Set window title
 		&self.window.set_window_title(&qs("PNach-rs"));
@@ -91,6 +103,7 @@ impl MainWindow {
 		// Ensure that left and right panes "stretch" identically
 		&self.layout.set_stretch(0, 1);
 		&self.layout.set_stretch(1, 1);
-
+		// Add the refresh button to the right pane
+		&self.right_pane.layout.add_widget_5a(&self.refresh_btn, 0, 0, 1, 1);
 	}
 }

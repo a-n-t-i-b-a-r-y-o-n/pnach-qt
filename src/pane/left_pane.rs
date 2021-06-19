@@ -31,7 +31,7 @@ impl StaticUpcast<QObject> for LeftPane {
 impl LeftPane {
 	pub unsafe fn new() -> Rc<Self> {
 		// Base group box and layout
-		let group_box = QGroupBox::from_q_string(&qs("Input Codes"));
+		let group_box = QGroupBox::from_q_string(&qs("Input Code(s)"));
 		let layout = QGridLayout::new_1a(&group_box);
 		group_box.set_layout(&layout);
 		// Tab bar
@@ -52,7 +52,7 @@ impl LeftPane {
 	/// Add widgets, connect slots
 	unsafe fn initialize(self: &Rc<Self>) {
 		// Set the tab position to the bottom (aka "South")
-		&self.tab_widget.set_tab_position(qt_widgets::q_tab_widget::TabPosition::South);
+		//&self.tab_widget.set_tab_position(qt_widgets::q_tab_widget::TabPosition::South);
 		// Set add_tab_btn to the empty corner, like a normal "Add" button
 		&self.tab_widget.set_corner_widget_1a(&self.add_tab_btn);
 		// Create a custom context menu for the add button
