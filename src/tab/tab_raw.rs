@@ -4,7 +4,9 @@ use qt_core::{QBox, QObject};
 use qt_widgets::{QGridLayout, QPlainTextEdit, QWidget};
 
 pub struct TabRaw {
-	pub base: QBox<QWidget>,
+	pub base:	QBox<QWidget>,
+	pub layout:	QBox<QGridLayout>,
+	pub field:	QBox<QPlainTextEdit>,
 }
 
 impl StaticUpcast<QObject> for TabRaw {
@@ -14,7 +16,7 @@ impl StaticUpcast<QObject> for TabRaw {
 }
 
 impl TabRaw {
-	pub unsafe fn new() -> QBox<QWidget> {
+	pub unsafe fn new() -> Rc<Self> {
 		// Create main widget and add layout
 		let base = QWidget::new_0a();
 		let layout = QGridLayout::new_1a(&base);
@@ -22,7 +24,13 @@ impl TabRaw {
 		// Create plain text field & add to layout
 		let field = QPlainTextEdit::new();
 		layout.add_widget_5a(&field, 0, 0, -1, -1);
-		// Return base widget
-		base
+		// Compose tab object w/ widgets
+		let this = Rc::new(Self {
+			base,
+			layout,
+			field
+		});
+		// Return composed tab
+		this
 	}
 }

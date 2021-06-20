@@ -1,10 +1,10 @@
 use std::rc::Rc;
 use qt_core::{
 	qs, slot,
-	QPoint,
-	SlotNoArgs
+	QBox, QObject, QPoint,
+	SlotNoArgs, SlotOfQObject,
 };
-use qt_widgets::{QMenu, QWidget, SlotOfQPoint};
+use qt_widgets::{QMenu, QTabWidget, QWidget, SlotOfIntBool, SlotOfQPoint};
 use cpp_core::Ref;
 use crate::pane::left_pane;
 use crate::tab::tab_raw::TabRaw;
@@ -35,11 +35,21 @@ impl left_pane::LeftPane {
 			// Identify the option that was selected by comparing raw ptrs
 			if selected == raw {
 				// Create a tab for raw codes
-				&self.tab_widget.add_tab_2a(&TabRaw::new(), &qs("Raw"));
+				let tab = TabRaw::new();
+				// Connect this tab's field's text_changed slot
+				tab.field.text_changed().connect(&self.slot_raw_text_changed());
+				// Add this tab's base widget to the tab bar
+				&self.tab_widget.add_tab_2a(&tab.base, &qs("Raw"));
 			}
 			else if selected == encoded {
 				// Create a new tab for encoded cheats
-				&self.tab_widget.add_tab_2a(&TabEncoded::new().base, &qs("Encoded"));
+				let tab = TabEncoded::new();
+				// Connect this tab's field's text_changed slot
+				tab.field.text_changed().connect(&self.slot_encoded_text_changed());
+				// Connect this tab's panel radio button slots
+				tab.panel_radios.button_toggled2().connect(&self.slot_radio_toggled());
+				// Add this tab's base widget to the tab bar
+				&self.tab_widget.add_tab_2a(&tab.base, &qs("Encoded"));
 			}
 		}
 	}
@@ -95,4 +105,18 @@ impl left_pane::LeftPane {
 		}
 	}
 
+	#[slot(SlotNoArgs)]
+	pub unsafe fn raw_text_changed(self: &Rc<Self>) {
+		//println!("Text changed on tab {}.", self.tab_widget.current_index());
+	}
+
+	#[slot(SlotNoArgs)]
+	pub unsafe fn encoded_text_changed(self: &Rc<Self>) {
+		//println!("Text changed on tab {}.", self.tab_widget.current_index());
+	}
+
+	#[slot(SlotOfIntBool)]
+	pub unsafe fn radio_toggled(self: &Rc<Self>, id: i32, checked: bool) {
+		//println!("Radio {} toggled.", id);
+	}
 }

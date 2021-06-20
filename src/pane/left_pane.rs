@@ -9,6 +9,7 @@ use qt_core::{
 use qt_widgets::{
 	QGridLayout, QGroupBox, QPushButton, QTabWidget
 };
+use crate::tab::tab_encoded::TabEncoded;
 
 pub struct LeftPane {
 	pub base:			QBox<QGroupBox>,		// Base widget - a group box
@@ -64,7 +65,11 @@ impl LeftPane {
 		&self.add_tab_btn.clicked()
 			.connect(&self.slot_add_tab_clicked());
 		// Add a Raw Code tab to start with
-		&self.tab_widget.add_tab_2a(&TabRaw::new(), &qs("Raw"));
+		let tab = TabRaw::new();
+		// Connect this tab's field's text_changed slot
+		tab.field.text_changed().connect(&self.slot_raw_text_changed());
+		// Add this tab's base widget to the tab bar
+		&self.tab_widget.add_tab_2a(&tab.base, &qs("Raw"));
 		// Add tab control to pane's base widget
 		&self.layout.add_widget_5a(&self.tab_widget, 0, 0, 1, -1);
 	}
