@@ -1,15 +1,14 @@
-use crate::main_window;
 use std::rc::Rc;
 use qt_core::{
-	qs, slot, ContextMenuPolicy,
-	QBox, QObject, QPoint,
+	qs, slot,
+	QPoint,
 	SlotNoArgs
 };
-use qt_widgets::{QApplication, QMenu, QMessageBox, QWidget, SlotOfQPoint};
-use cpp_core::{NullPtr, Ref};
+use qt_widgets::{QMenu, QWidget, SlotOfQPoint};
+use cpp_core::Ref;
 use crate::pane::left_pane;
-use crate::tab::tab_raw::TabInputRaw;
-use crate::tab::tab_encoded::TabInputEncoded;
+use crate::tab::tab_raw::TabRaw;
+use crate::tab::tab_encoded::TabEncoded;
 
 
 /// Left pane slots
@@ -36,17 +35,17 @@ impl left_pane::LeftPane {
 			// Identify the option that was selected by comparing raw ptrs
 			if selected == raw {
 				// Create a tab for raw codes
-				&self.tab_widget.add_tab_2a(&TabInputRaw::new().base, &qs("Raw"));
+				&self.tab_widget.add_tab_2a(&TabRaw::new(), &qs("Raw"));
 			}
 			else if selected == encoded {
 				// Create a new tab for encoded cheats
-				&self.tab_widget.add_tab_2a(&TabInputEncoded::new().base, &qs("Encoded"));
+				&self.tab_widget.add_tab_2a(&TabEncoded::new().base, &qs("Encoded"));
 			}
 		}
 	}
 
 	#[slot(SlotOfQPoint)]
-	pub unsafe fn add_tab_button_context_menu_requested(self: &Rc<Self>, pos: Ref<QPoint>) { self.add_tab_clicked(); }
+	pub unsafe fn add_tab_button_context_menu_requested(self: &Rc<Self>, _: Ref<QPoint>) { self.add_tab_clicked(); }
 
 	#[slot(SlotOfQPoint)]
 	pub unsafe fn tab_context_menu_requested(self: &Rc<Self>, pos: Ref<QPoint>) {
@@ -88,8 +87,8 @@ impl left_pane::LeftPane {
 					// Select this unclosed tab
 					self.tab_widget.tab_bar().set_current_index(0);
 					// Remove every other tab
-					for i in {1..self.tab_widget.tab_bar().count()} {
-							self.tab_widget.tab_bar().remove_tab(tab);
+					for i in 1..self.tab_widget.tab_bar().count() {
+							self.tab_widget.tab_bar().remove_tab(i);
 					}
 				}
 			}

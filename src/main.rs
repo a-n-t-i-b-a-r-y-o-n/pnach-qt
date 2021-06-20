@@ -8,7 +8,7 @@ mod pane;
 mod tab;
 
 fn main() {
-    QApplication::init(|app| unsafe {
+    QApplication::init(|_| unsafe {
 		let window = MainWindow::new();
 		window.initialize();
 		window.show();

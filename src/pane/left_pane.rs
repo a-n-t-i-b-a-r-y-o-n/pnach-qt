@@ -1,19 +1,14 @@
-use crate::tab::tab_raw::TabInputRaw;
+use crate::tab::tab_raw::TabRaw;
 use crate::embedded_images::{ICON, get_icon};
-use crate::main_window_slots;
-
 use std::rc::Rc;
-use cpp_core::{Ptr, Ref, StaticUpcast, NullPtr};
+use cpp_core::{Ptr, StaticUpcast};
 use qt_core::{
-	qs, slot, ContextMenuPolicy,
-	QBox, QObject, QPoint,
-	SlotNoArgs
+	qs, ContextMenuPolicy,
+	QBox, QObject
 };
 use qt_widgets::{
-	QGridLayout, QGroupBox, QMenu, QMessageBox, QPushButton, QTabWidget, QWidget,
-	SlotOfQPoint
+	QGridLayout, QGroupBox, QPushButton, QTabWidget
 };
-use crate::main_window::MainWindow;
 
 pub struct LeftPane {
 	pub base:			QBox<QGroupBox>,		// Base widget - a group box
@@ -69,7 +64,7 @@ impl LeftPane {
 		&self.add_tab_btn.clicked()
 			.connect(&self.slot_add_tab_clicked());
 		// Add a Raw Code tab to start with
-		&self.tab_widget.add_tab_2a(&TabInputRaw::new().base, &qs("Raw"));
+		&self.tab_widget.add_tab_2a(&TabRaw::new(), &qs("Raw"));
 		// Add tab control to pane's base widget
 		&self.layout.add_widget_5a(&self.tab_widget, 0, 0, 1, -1);
 	}

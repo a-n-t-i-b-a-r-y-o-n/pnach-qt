@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use cpp_core::{Ptr, StaticUpcast};
 use qt_core::{qs, QBox, QObject, QPtr};
-use qt_widgets::{QDialog, QMainWindow, QMenu, QMenuBar, QGroupBox, QHBoxLayout, QPushButton, QWidget};
+use qt_widgets::{QMainWindow, QMenu, QMenuBar, QHBoxLayout, QPushButton, QWidget};
 use crate::pane::{left_pane::LeftPane, right_pane::RightPane};
 use crate::embedded_images::*;
 

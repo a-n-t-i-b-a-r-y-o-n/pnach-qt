@@ -1,10 +1,8 @@
 use std::rc::Rc;
-use cpp_core::{Ptr, StaticUpcast, NullPtr, Ref};
-use qt_core::{qs, slot, QBox, QObject, SlotNoArgs};
-use qt_widgets::{QGridLayout, QGroupBox, QMessageBox, QPushButton, QPlainTextEdit};
-use std::collections::HashMap;
+use cpp_core::{Ptr, StaticUpcast};
+use qt_core::{qs, QBox, QObject};
+use qt_widgets::{QGridLayout, QGroupBox, QPushButton, QPlainTextEdit};
 use crate::embedded_images::{ICON, get_icon};
-use crate::pane::left_pane::LeftPane;
 
 pub struct RightPane {
 	pub base:			QBox<QGroupBox>,
@@ -31,7 +29,7 @@ impl RightPane {
 		let save_btn = QPushButton::from_q_icon_q_string(&get_icon(ICON::SAVE), &qs(""));
 		let field = QPlainTextEdit::new();
 		// Pane object
-		let mut this = Rc::new(Self {
+		let this = Rc::new(Self {
 			base: group_box,
 			layout,
 			copy_btn,
@@ -40,7 +38,6 @@ impl RightPane {
 		});
 		// Finish initialization
 		this.initialize_pane();
-
 		this
 	}
 
@@ -55,11 +52,6 @@ impl RightPane {
 		// Connect the clicked() slots for buttons
 		&self.copy_btn.clicked().connect(&self.slot_on_copy_btn_clicked());
 		&self.save_btn.clicked().connect(&self.slot_on_save_btn_clicked());
-	}
-
-	/// Refresh the field
-	pub fn refresh_field(self: &Rc<Self>) {
-
 	}
 
 }
