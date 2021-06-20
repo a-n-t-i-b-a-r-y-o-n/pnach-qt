@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
-pub mod input_raw;
-pub mod input_encoded;
+pub mod tab_raw;
+pub mod tab_encoded;
 
 pub enum TabType { RAW, ENCODED }
 

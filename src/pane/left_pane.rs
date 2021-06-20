@@ -1,4 +1,4 @@
-use crate::tab::input_raw::TabInputRaw;
+use crate::tab::tab_raw::TabInputRaw;
 use crate::embedded_images::{ICON, get_icon};
 use crate::main_window_slots;
 
@@ -51,26 +51,27 @@ impl LeftPane {
 	}
 	/// Add widgets, connect slots
 	unsafe fn initialize(self: &Rc<Self>) {
+		// Show X buttons on tabs
+		//&self.tab_widget.set_tabs_closable(true);
 		// Set the tab position to the bottom (aka "South")
 		//&self.tab_widget.set_tab_position(qt_widgets::q_tab_widget::TabPosition::South);
 		// Set add_tab_btn to the empty corner, like a normal "Add" button
 		&self.tab_widget.set_corner_widget_1a(&self.add_tab_btn);
 		// Create a custom context menu for the add button
-		self.add_tab_btn.set_context_menu_policy(ContextMenuPolicy::CustomContextMenu);
-		self.add_tab_btn.custom_context_menu_requested()
-			.connect(&self.slot_add_tab_context_menu_requested());
-		self.add_tab_btn.clicked()
+		&self.add_tab_btn.set_context_menu_policy(ContextMenuPolicy::CustomContextMenu);
+		&self.add_tab_btn.custom_context_menu_requested()
+			.connect(&self.slot_add_tab_button_context_menu_requested());
+		// Create a custom context menu for the tab bar
+		&self.tab_widget.tab_bar().set_context_menu_policy(ContextMenuPolicy::CustomContextMenu);
+		&self.tab_widget.tab_bar().custom_context_menu_requested()
+			.connect(&self.slot_tab_context_menu_requested());
+		// Connect clicked() slot
+		&self.add_tab_btn.clicked()
 			.connect(&self.slot_add_tab_clicked());
-
 		// Add a Raw Code tab to start with
-		let tab0 = TabInputRaw::new();
-		&self.tab_widget.add_tab_2a(&tab0.base, &qs("RAW"));
-
+		&self.tab_widget.add_tab_2a(&TabInputRaw::new().base, &qs("Raw"));
 		// Add tab control to pane's base widget
 		&self.layout.add_widget_5a(&self.tab_widget, 0, 0, 1, -1);
 	}
-
-
-
 
 }

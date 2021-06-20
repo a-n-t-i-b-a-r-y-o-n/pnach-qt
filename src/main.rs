@@ -6,8 +6,6 @@ mod main_window_slots;
 mod embedded_images;
 mod pane;
 mod tab;
-mod assimilation;
-mod sanitization;
 
 fn main() {
     QApplication::init(|app| unsafe {

@@ -8,6 +8,8 @@ use qt_core::{
 use qt_widgets::{QApplication, QMenu, QMessageBox, QWidget, SlotOfQPoint};
 use cpp_core::{NullPtr, Ref};
 use crate::pane::left_pane;
+use crate::tab::tab_raw::TabInputRaw;
+use crate::tab::tab_encoded::TabInputEncoded;
 
 
 /// Left pane slots
@@ -23,28 +25,75 @@ impl left_pane::LeftPane {
 		//println!("({:?}, {:?})", global_pos.x(), global_pos.y());
 		// Create menu
 		let menu = QMenu::new();
+		// Add menu options, as "raw ptr" for comparison later
 		let raw = menu.add_action_q_string(&qs("Raw")).as_raw_ptr();
 		let encoded = menu.add_action_q_string(&qs("Encoded")).as_raw_ptr();
-		let detect = menu.add_action_q_string(&qs("Auto-Detect..."));
-
+		// Display menu and capture selection
 		let selection = menu.exec_1a_mut(&global_pos);
+		// Check if something was selected
 		if !selection.is_null() {
 			let selected = selection.as_raw_ptr();
+			// Identify the option that was selected by comparing raw ptrs
 			if selected == raw {
-				println!("Raw selected.");
+				// Create a tab for raw codes
+				&self.tab_widget.add_tab_2a(&TabInputRaw::new().base, &qs("Raw"));
 			}
 			else if selected == encoded {
-				println!("Encoded selected.");
+				// Create a new tab for encoded cheats
+				&self.tab_widget.add_tab_2a(&TabInputEncoded::new().base, &qs("Encoded"));
 			}
 		}
-		else {
-			println!("Nothing selected.");
-		}
-
-		//println!("{:?}", selection);
 	}
 
 	#[slot(SlotOfQPoint)]
-	pub unsafe fn add_tab_context_menu_requested(self: &Rc<Self>, pos: Ref<QPoint>) { self.add_tab_clicked(); }
+	pub unsafe fn add_tab_button_context_menu_requested(self: &Rc<Self>, pos: Ref<QPoint>) { self.add_tab_clicked(); }
+
+	#[slot(SlotOfQPoint)]
+	pub unsafe fn tab_context_menu_requested(self: &Rc<Self>, pos: Ref<QPoint>) {
+		// Only trigger if there's more than 1 tab
+		if self.tab_widget.tab_bar().count() > 1 {
+			// Translate given point to global point
+			let global_pos = QWidget::map_to_global(&self.base, pos);
+			// Create menu
+			let menu = QMenu::new();
+			// Add menu options, as "raw ptr" for comparison later
+			let close = menu.add_action_q_string(&qs("Close Tab")).as_raw_ptr();
+			let close_others = menu.add_action_q_string(&qs("Close Other Tabs")).as_raw_ptr();
+			// Display menu and capture selection
+			let selection = menu.exec_1a_mut(&global_pos);
+			// Check if something was selected
+			if !selection.is_null() {
+				// Get the menu selection
+				let menu_option = selection.as_raw_ptr();
+				// Identify which tab was clicked
+				let tab: i32 = self.tab_widget.tab_bar().tab_at(pos);
+				// Identify if the current tab was the one clicked
+				let current_selected = self.tab_widget.tab_bar().current_index() == tab;
+				// Identify the option that was selected by comparing raw ptrs
+				if menu_option == close {
+					// Switch to the next tab if need be, or previous if there isn't a next
+					if current_selected {
+						if self.tab_widget.tab_bar().count() > tab {
+							self.tab_widget.tab_bar().set_current_index(tab+1);
+						} else {
+							self.tab_widget.tab_bar().set_current_index(tab-1);
+						}
+					}
+					// Close the selected tab
+					&self.tab_widget.tab_bar().remove_tab(tab);
+				}
+				else if menu_option == close_others {
+					// Move tab to the left side
+					self.tab_widget.tab_bar().move_tab(tab, 0);
+					// Select this unclosed tab
+					self.tab_widget.tab_bar().set_current_index(0);
+					// Remove every other tab
+					for i in {1..self.tab_widget.tab_bar().count()} {
+							self.tab_widget.tab_bar().remove_tab(tab);
+					}
+				}
+			}
+		}
+	}
 
 }
