@@ -1,8 +1,11 @@
+use libpnach::raw_code;
+
 use std::rc::Rc;
 use qt_core::{qs, QVariant, QPtr};
 use qt_widgets::{QPlainTextEdit, QRadioButton, QWidget};
 use cpp_core::CppBox;
 use std::any::Any;
+use libpnach::pnach_code::PNachCode;
 
 pub mod tab_raw;
 pub mod tab_encoded;
@@ -25,11 +28,13 @@ unsafe fn identify_tab_type(tab: &QPtr<QWidget>) -> TabType {
 }
 
 /// Get raw and/or decoded codes from a tab
-pub unsafe fn get_raw_codes(tab: &QPtr<QWidget>) -> String {
+pub unsafe fn get_raw_codes(tab: &QPtr<QWidget>) -> Vec<PNachCode> {
 	match identify_tab_type(tab) {
 		TabType::RAW => {
 			// Get input field contents
-			tab.layout().item_at(0).widget().static_downcast::<QPlainTextEdit>().to_plain_text().to_std_string()
+			let input = tab.layout().item_at(0).widget().static_downcast::<QPlainTextEdit>().to_plain_text().to_std_string();
+
+			raw_code::parse_raw_codes(&input).unwrap()
 		}
 		TabType::ENCODED => {
 			// Get encoded cheats string
@@ -54,7 +59,7 @@ pub unsafe fn get_raw_codes(tab: &QPtr<QWidget>) -> String {
 }
 
 /// Detect possible code type
-fn decode(encoded_cheats: &str, encoding: i32) -> String {
-	String::from(encoded_cheats)
+fn decode(encoded_cheats: &str, encoding: i32) -> Vec<PNachCode> {
+	vec![PNachCode::new(Some("Code 1"), vec![(123456, 123456)])]
 }
 
