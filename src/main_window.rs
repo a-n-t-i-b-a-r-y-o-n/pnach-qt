@@ -64,7 +64,7 @@ impl MainWindow {
 		// Initialize and configure window layout
 		&self.initialize_layout();
 		// Connect the refresh button clicked() slot
-		&self.refresh_btn.clicked().connect(&self.slot_refresh_clicked());
+		&self.refresh_btn.clicked().connect(&self.slot_generate_pnach());
 	}
 	/// Initialize the main window frame
 	unsafe fn initialize_frame(self: &Rc<Self>) {
@@ -80,13 +80,14 @@ impl MainWindow {
 		let file_menu: &QPtr<QMenu> = &self.menu.add_menu_q_string(&qs("File"));
 		let about_menu: &QPtr<QMenu> = &self.menu.add_menu_q_string(&qs("About"));
 
-		// Add QMenu widgets to the "File" QMenu, along with connectors
+		// "New File" menu option
 		let file_new = file_menu.add_action_q_string(&qs("New PNach File..."));
 		file_new.triggered().connect(&self.slot_new_file());
+		// Separator
 		file_menu.add_separator();
-
-		let _file_open = file_menu.add_action_q_string(&qs("Open PNach File..."));
-
+		// "Open File" menu option
+		let file_open = file_menu.add_action_q_string(&qs("Open PNach File..."));
+		file_open.triggered().connect(&self.slot_open_file());
 		// Add QMenu widgets to the "Help" QMenu
 		let _help_help = about_menu.add_action_q_string(&qs("Help"));
 		about_menu.add_separator();

@@ -29,7 +29,7 @@ impl RightPane {
 		let save_btn = QPushButton::from_q_icon_q_string(&get_icon(ICON::SAVE), &qs(""));
 		let field = QPlainTextEdit::new();
 		// Pane object
-		let this = Rc::new(Self {
+		let mut this = Rc::new(Self {
 			base: group_box,
 			layout,
 			copy_btn,

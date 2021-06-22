@@ -4,6 +4,7 @@ use qt_core::{
 	qs, slot,
 	SlotNoArgs
 };
+use qt_widgets::{QFileDialog, q_file_dialog::AcceptMode};
 
 /// Right pane slots
 impl right_pane::RightPane {
@@ -17,6 +18,11 @@ impl right_pane::RightPane {
 	}
 	#[slot(SlotNoArgs)]
 	pub unsafe fn on_save_btn_clicked(self: &Rc<Self>) {
-		&self.field.set_plain_text(&qs("Saving..."));
+		// Create the file picker dialog
+		let save_dialog = QFileDialog::from_q_widget_q_string(&self.base, &qs("Save PNach File..."));
+		// Set the dialog to save mode
+		save_dialog.set_accept_mode(AcceptMode::AcceptSave);
+		// Show dialog
+		save_dialog.show();
 	}
 }

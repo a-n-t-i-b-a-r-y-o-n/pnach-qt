@@ -37,7 +37,7 @@ impl left_pane::LeftPane {
 				// Create a tab for raw codes
 				let tab = TabRaw::new();
 				// Connect this tab's field's text_changed slot
-				tab.field.text_changed().connect(&self.slot_raw_text_changed());
+				tab.field.text_changed().connect(&self.slot_left_pane_text_changed());
 				// Add this tab's base widget to the tab bar
 				&self.tab_widget.add_tab_2a(&tab.base, &qs("Raw"));
 			}
@@ -45,7 +45,7 @@ impl left_pane::LeftPane {
 				// Create a new tab for encoded cheats
 				let tab = TabEncoded::new();
 				// Connect this tab's field's text_changed slot
-				tab.field.text_changed().connect(&self.slot_encoded_text_changed());
+				tab.field.text_changed().connect(&self.slot_left_pane_text_changed());
 				// Connect this tab's panel radio button slots
 				tab.panel_radios.button_toggled2().connect(&self.slot_radio_toggled());
 				// Add this tab's base widget to the tab bar
@@ -106,13 +106,8 @@ impl left_pane::LeftPane {
 	}
 
 	#[slot(SlotNoArgs)]
-	pub unsafe fn raw_text_changed(self: &Rc<Self>) {
-		//println!("Text changed on tab {}.", self.tab_widget.current_index());
-	}
-
-	#[slot(SlotNoArgs)]
-	pub unsafe fn encoded_text_changed(self: &Rc<Self>) {
-		//println!("Text changed on tab {}.", self.tab_widget.current_index());
+	pub unsafe fn left_pane_text_changed(self: &Rc<Self>) {
+		println!("Text changed on tab {}.", self.tab_widget.current_index());
 	}
 
 	#[slot(SlotOfIntBool)]

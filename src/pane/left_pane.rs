@@ -55,7 +55,7 @@ impl LeftPane {
 		// Game CRC field
 		let game_crc = QLineEdit::new();
 		// Compose pane object w/ above widgets
-		let this = Rc::new(Self {
+		let mut this = Rc::new(Self {
 			base,
 			layout,
 			top_box,
@@ -79,7 +79,7 @@ impl LeftPane {
 		self.initialize_layouts();
 	}
 
-	unsafe fn initialize_top(self: &Rc<Self>) {
+	unsafe fn initialize_bottom(self: &Rc<Self>) {
 		// Show X buttons on tabs
 		//&self.tab_widget.set_tabs_closable(true);
 		// Set the tab position to the bottom (aka "South")
@@ -89,14 +89,15 @@ impl LeftPane {
 		// Add one of each tab to start with
 		let raw = TabRaw::new();
 		let encoded	= TabEncoded::new();
-		// Connect this tab's field's text_changed slot
-		raw.field.text_changed().connect(&self.slot_raw_text_changed());
+		// Connect these tabs' fields' text_changed slots
+		raw.field.text_changed().connect(&self.slot_left_pane_text_changed());
+		encoded.field.text_changed().connect(&self.slot_left_pane_text_changed());
 		// Add these tabs' base widgets to the tab bar
 		&self.tab_widget.add_tab_2a(&raw.base, &qs("Raw"));
 		&self.tab_widget.add_tab_2a(&encoded.base, &qs("Encoded"));
 	}
 
-	unsafe fn initialize_bottom(self: &Rc<Self>) {
+	unsafe fn initialize_top(self: &Rc<Self>) {
 		// Field label
 		&self.bottom_layout.add_widget(&QLabel::from_q_string(&qs("Game name:")));
 		// Add the "Game Name" field
@@ -127,9 +128,14 @@ impl LeftPane {
 		&self.tab_widget.tab_bar().set_context_menu_policy(ContextMenuPolicy::CustomContextMenu);
 		&self.tab_widget.tab_bar().custom_context_menu_requested()
 			.connect(&self.slot_tab_context_menu_requested());
-		// Connect clicked() slot
+		// Connect clicked() slot to new tab button
 		&self.add_tab_btn.clicked()
 			.connect(&self.slot_add_tab_clicked());
+		// text_changed() slots for game info fields
+		&self.game_name.text_changed()
+			.connect(&self.slot_left_pane_text_changed());
+		&self.game_crc.text_changed()
+			.connect(&self.slot_left_pane_text_changed());
 	}
 
 }

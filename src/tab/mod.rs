@@ -10,6 +10,10 @@ use libpnach::pnach_code::PNachCode;
 pub mod tab_raw;
 pub mod tab_encoded;
 
+// Re-export the objects
+pub use tab_raw::TabRaw;
+pub use tab_encoded::TabEncoded;
+
 #[derive(Debug)]
 pub enum TabType { RAW, ENCODED }
 
