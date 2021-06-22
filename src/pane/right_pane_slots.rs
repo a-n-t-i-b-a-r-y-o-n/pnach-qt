@@ -1,4 +1,4 @@
-use crate::pane::right_pane;
+use crate::pane::RightPane;
 use std::rc::Rc;
 use qt_core::{
 	qs, slot,
@@ -7,7 +7,7 @@ use qt_core::{
 use qt_widgets::{QFileDialog, q_file_dialog::AcceptMode};
 
 /// Right pane slots
-impl right_pane::RightPane {
+impl RightPane {
 	/// Use Qt to copy to field contents to the clipboard
 	#[slot(SlotNoArgs)]
 	pub unsafe fn on_copy_btn_clicked(self: &Rc<Self>) {

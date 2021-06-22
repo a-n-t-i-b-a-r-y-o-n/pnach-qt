@@ -6,13 +6,12 @@ use qt_core::{
 };
 use qt_widgets::{QMenu, QTabWidget, QWidget, SlotOfIntBool, SlotOfQPoint};
 use cpp_core::Ref;
-use crate::pane::left_pane;
-use crate::tab::tab_raw::TabRaw;
-use crate::tab::tab_encoded::TabEncoded;
+use crate::pane::LeftPane;
+use crate::tab::{TabRaw, TabEncoded};
 
 
 /// Left pane slots
-impl left_pane::LeftPane {
+impl LeftPane {
 	#[slot(SlotNoArgs)]
 	/// The Add Tab "+" button opens a context menu to allow selecting different types of input tabs
 	pub unsafe fn add_tab_clicked(self: &Rc<Self>) {

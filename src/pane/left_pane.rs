@@ -1,4 +1,4 @@
-use crate::tab::tab_raw::TabRaw;
+use crate::tab::{TabRaw, TabEncoded};
 use crate::embedded_images::{ICON, get_icon};
 use std::rc::Rc;
 use cpp_core::{Ptr, StaticUpcast};
@@ -11,7 +11,6 @@ use qt_widgets::{
 	QLabel, QLineEdit, QPushButton,
 	QTabWidget, QWidget
 };
-use crate::tab::tab_encoded::TabEncoded;
 
 pub struct LeftPane {
 	pub base:			QBox<QWidget>,			// Base widget - a group box
