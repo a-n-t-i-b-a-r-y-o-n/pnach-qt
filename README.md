@@ -3,11 +3,11 @@ _Cross-platform PCSX2 cheat utility with Rust + Qt_
 
 ---
 
-h2. Current status: 
+### Current status: 
 - [x] Qt GUI
 - [x] PNach creation
 - [x] RAW code translation
-- [ ] Code decryption/decoding
+- [ ] Code decryption/decoding (OmniConvert Rust port WIP)
 
 
 ---
