@@ -5,7 +5,7 @@ authors = ["a-n-t-i-b-a-r-y-o-n"]
 edition = "2018"
 
 [dependencies]
-# Ported Omniconvert library
+# Ported Omniconvert library (still WIP)
 #omniconvert-rs = { path = "../omniconvert-rs" }
 # PNach manip
 libpnach = { path = "../libpnach" }
