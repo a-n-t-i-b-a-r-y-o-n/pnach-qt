@@ -1,4 +1,4 @@
-# PNach-rs
+# PNach-qt
 _Cross-platform PCSX2 cheat utility with Rust + Qt_
 
 ---
@@ -8,6 +8,7 @@ _Cross-platform PCSX2 cheat utility with Rust + Qt_
 - [x] PNach creation
 - [x] RAW code translation
 - [ ] Code decryption/decoding (OmniConvert Rust port WIP)
+- [ ] Deployment/Installation process
 
 
 ---
@@ -25,11 +26,11 @@ Recently, I turned to PCSX2 to help relive my childhood, only to find that the l
   
 Having recently stumbled onto the lovely [Ritual](https://rust-qt.github.io/qt/) project for generating Qt 5.x Rust bindings, I was looking for a new GUI project to use as a testbed.
   
-Out of this, pnach-rs was born!  
+Out of this, pnach-qt was born!  
   
 ### Screenshots
 
-Here's two screenshots for now, demoing the program in my two favorite KDE themes: [Sweet Mars](https://store.kde.org/p/1393507/) & [Orchis](https://store.kde.org/p/1458927/).  
+Here's two screenshots for now, demoing the program in my favorite light & dark KDE themes: [Sweet Mars](https://store.kde.org/p/1393507/) & [Orchis](https://store.kde.org/p/1458927/).  
 Shoutout to eliverlara and vinceliuice for their beautiful themes!  
   
 ![Dark theme](screenshots/dark_1.png)
